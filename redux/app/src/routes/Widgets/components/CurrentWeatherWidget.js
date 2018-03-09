@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
-import WithLocationAndWeather from './WithLocationAndWeather';
+import WithLocation from './WithLocation';
 
 // POC purposes a dirty way to Import images.
 import sunny from '../../../resources/images/wi-day-sunny.svg';
@@ -11,11 +12,21 @@ import thunder from '../../../resources/images/wi-thunderstorm.svg';
 import drizzle from '../../../resources/images/wi-showers.svg';
 import alien from '../../../resources/images/wi-alien.svg';
 
+const apikey = 'e7e3382130f4acab977c87d967f005be';
+
 class CurrentWeatherWidget extends Component {
   // Default icons from openweathermap.org
   //static getWeatherIcon(url) {
   //  return `http://openweathermap.org/img/w/${url}.png`;
   //}
+
+  static createRequest(city, country) {
+    return `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&APPID=${apikey}`;
+  }
+
+  static createRequestWithCords(lat, lon) {
+    return `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${apikey}`;
+  }
 
   static getIcon(type) {
     switch (type) {
@@ -41,7 +52,60 @@ class CurrentWeatherWidget extends Component {
 
     this.renderWeather = this.renderWeather.bind(this);
     this.renderLocation = this.renderLocation.bind(this);
+    this.fetchWeather = this.fetchWeather.bind(this);
+    this.weatherStatus = this.weatherStatus.bind(this);
+  }
 
+  state = {
+    weather: {
+      data: {},
+      error: false,
+      errorContent: null,
+    },
+    weatherFetched: false,
+    weatherLoading: false,
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.userLocation.located !== this.props.userLocation.located) {
+      this.fetchWeather(this.props.userLocation);
+    }
+  }
+
+
+  fetchWeather(userLocation) {
+    const { city, countryCode, cords } = userLocation;
+    this.setState({ weatherLoading: true });
+    //const request = this.constructor.createRequest(city, countryCode);
+    const request = this.constructor.createRequestWithCords(cords.lat, cords.lon);
+    axios.get(request).then(response => {
+      if (response) {
+        this.setState({
+          weather: {
+            data: response.data,
+          },
+        });
+      }
+    })
+    .then(() => {
+      this.setState({
+       weatherFetched: true,
+       weatherLoading: false,
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+      this.setState({
+        weatherLoading: false,
+        weather: { error: true, errorContent: error.response }});
+    });
+
+    return null;
+  };
+
+  weatherStatus(state) {
+    if (state.weatherLoading) {return <span>Checking out the window...</span>}
+    if (state.weather.error) {return <span>Something went wrong!!!</span>}
   }
 
   renderWeather(data) {
@@ -87,37 +151,37 @@ class CurrentWeatherWidget extends Component {
     );
   };
 
-  renderLocation(location) {
+  renderLocation(userLocation) {
     const LocationContainer = styled.div`
       font-size: 1.5rem;
       margin-top: 1rem;
     `;
-    if (!location.city || !location.country) {
+    if (!userLocation.city || !userLocation.country) {
       return (
         <LocationContainer>
-          <span>Lan: {location.cords.lat} Lon: {location.cords.lon}</span>
+          <span>Lan: {userLocation.cords.lat} Lon: {userLocation.cords.lon}</span>
         </LocationContainer>
       );
     }
     return (
       <LocationContainer>
-        <span>{location.city}, {location.country}</span>
+        <span>{userLocation.city}, {userLocation.country}</span>
       </LocationContainer>
     );
   }
 
   render() {
-    const { location, weather, weatherFetched } = this.props;
+    const { userLocation, weather, weatherFetched } = this.props;
 
     return (
       <WidgetContainer>
         {weatherFetched && weather.data
           ? this.renderWeather(weather.data)
-          : <span>Checking out the window...</span>
+          : this.weatherStatus(this.state)
         }
-        {location.located
-          ? this.renderLocation(location)
-          : <span>Looking up location...</span>
+        {userLocation.located
+          ? this.renderLocation(userLocation)
+          : <span>Finding user...</span>
         }
       </WidgetContainer>
     );
@@ -132,8 +196,8 @@ const WidgetContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 1rem;
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
   width: 100%;
 `;
 
-export default WithLocationAndWeather(CurrentWeatherWidget);
+export default WithLocation(CurrentWeatherWidget);
