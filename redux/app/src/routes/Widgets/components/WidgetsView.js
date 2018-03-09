@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CurrentWeatherWidget from './CurrentWeatherWidget';
+import ForecastWidget from './ForecastWidget';
 
 
 class WidgetsView extends Component {
@@ -11,6 +12,7 @@ class WidgetsView extends Component {
     return (
       <WidgetContainer>
         <CurrentWeatherWidget />
+        <ForecastWidget />
       </WidgetContainer>
     );
   }
@@ -22,7 +24,7 @@ const WidgetContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  max-width: 15rem;
+  max-width: 20rem;
 `;
 
 export default WidgetsView;
