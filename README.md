@@ -1,2 +1,2 @@
-# react-things
-React-things
+# React-things
+Testing && learning react and other somewhat related techs.
