@@ -171,7 +171,8 @@ class CurrentWeatherWidget extends Component {
   }
 
   render() {
-    const { userLocation, weather, weatherFetched } = this.props;
+    const { userLocation } = this.props;
+    const { weather, weatherFetched } = this.state;
 
     return (
       <WidgetContainer>
