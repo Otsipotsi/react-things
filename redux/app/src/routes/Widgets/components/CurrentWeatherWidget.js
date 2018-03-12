@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import WithLocation from './WithLocation';
 import { openWeatherApiKey } from '../../../config/ApiKeys.js';
 
 // POC purposes a dirty way to Import images.
@@ -201,4 +200,4 @@ const WidgetContainer = styled.div`
   width: 100%;
 `;
 
-export default WithLocation(CurrentWeatherWidget);
+export default CurrentWeatherWidget;

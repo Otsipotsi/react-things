@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import WithLocation from './WithLocation';
 import CurrentWeatherWidget from './CurrentWeatherWidget';
 import ForecastWidget from './ForecastWidget';
 
@@ -11,8 +12,8 @@ class WidgetsView extends Component {
   render() {
     return (
       <WidgetContainer>
-        <CurrentWeatherWidget />
-        <ForecastWidget />
+        <CurrentWeatherWidget userLocation={this.props.userLocation} />
+        <ForecastWidget userLocation={this.props.userLocation} />
       </WidgetContainer>
     );
   }
@@ -27,4 +28,4 @@ const WidgetContainer = styled.div`
   max-width: 20rem;
 `;
 
-export default WidgetsView;
+export default WithLocation(WidgetsView);
