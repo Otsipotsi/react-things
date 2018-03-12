@@ -156,7 +156,7 @@ class CurrentWeatherWidget extends Component {
       font-size: 1.5rem;
       margin-top: 1rem;
     `;
-    if (!userLocation.city || !userLocation.country) {
+    if (!userLocation.formatted_address) {
       return (
         <LocationContainer>
           <span>Lan: {userLocation.cords.lat} Lon: {userLocation.cords.lon}</span>
@@ -165,7 +165,7 @@ class CurrentWeatherWidget extends Component {
     }
     return (
       <LocationContainer>
-        <span>{userLocation.city}, {userLocation.country}</span>
+        <span>{userLocation.formatted_address}</span>
       </LocationContainer>
     );
   }

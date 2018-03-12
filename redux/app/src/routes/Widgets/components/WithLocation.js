@@ -12,7 +12,7 @@ const WithLocation = WrappedComponent =>
   class  extends Component {
 
     static getLocUrl(lat, lon) {
-      return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&result_type=political&key=${ggApiKey}`;
+      return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&language=en-GB&result_type=political&key=${ggApiKey}`;
     }
 
     constructor(props) {
@@ -29,7 +29,7 @@ const WithLocation = WrappedComponent =>
         city: null,
         country: null,
         countryCode: null,
-        formatted_address: null,
+        formatted_address: '',
         cords: {
           lat: null,
           lon: null,
@@ -45,9 +45,11 @@ const WithLocation = WrappedComponent =>
 
     shouldComponentUpdate(nextProps, nextState) {
       if (this.state.userLocation.located !== nextState.userLocation.located) {
-        console.log('updated', this.state, nextState);
         const { lat, lon } = nextState.userLocation.cords;
         this.fetchLocationDetailsByLonLat(lat, lon);
+        return true;
+      }
+      if (this.state.userLocation.formatted_address !== nextState.userLocation.formatted_address) {
         return true;
       }
       return false;
@@ -57,7 +59,6 @@ const WithLocation = WrappedComponent =>
       axios.get(this.constructor.getLocUrl(lat, lon)).then(response => {
         if (response) {
           const { results } = response.data;
-          console.log(results[0].formatted_address);
           this.setState((prevState) => ({
             userLocation: {
               ...prevState.userLocation,
@@ -104,6 +105,7 @@ const WithLocation = WrappedComponent =>
               city: response.data.city,
               country: response.data.country,
               countryCode: response.data.countryCode,
+              formatted_address: `${response.data.city}, ${response.data.country}`,
               cords: {
                 lat: response.data.lat,
                 lon: response.data.lon,
