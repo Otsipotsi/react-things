@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import WithLocation from './WithLocation';
+import { openWeatherApiKey } from '../../../config/ApiKeys.js';
 
 // POC purposes a dirty way to Import images.
 import sunny from '../../../resources/images/wi-day-sunny.svg';
@@ -12,7 +13,6 @@ import thunder from '../../../resources/images/wi-thunderstorm.svg';
 import drizzle from '../../../resources/images/wi-showers.svg';
 import alien from '../../../resources/images/wi-alien.svg';
 
-const apikey = 'e7e3382130f4acab977c87d967f005be';
 
 class CurrentWeatherWidget extends Component {
   // Default icons from openweathermap.org
@@ -21,11 +21,11 @@ class CurrentWeatherWidget extends Component {
   //}
 
   static createRequest(city, country) {
-    return `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&APPID=${apikey}`;
+    return `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&units=metric&APPID=${openWeatherApiKey}`;
   }
 
   static createRequestWithCords(lat, lon) {
-    return `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${apikey}`;
+    return `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${openWeatherApiKey}`;
   }
 
   static getIcon(type) {
