@@ -25,7 +25,7 @@ const WidgetContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  max-width: 20rem;
+  max-width: 25rem;
 `;
 
 export default WithLocation(WidgetsView);

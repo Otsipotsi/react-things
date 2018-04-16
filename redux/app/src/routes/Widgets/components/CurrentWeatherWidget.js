@@ -196,7 +196,7 @@ const WidgetContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 1rem;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 0 auto;
   width: 100%;
 `;
 
