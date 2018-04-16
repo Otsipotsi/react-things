@@ -40,7 +40,6 @@ class ForecastWidget extends Component {
     }
   }
 
-
   constructor(props) {
     super();
 
@@ -48,7 +47,6 @@ class ForecastWidget extends Component {
     this.filterDays = this.filterDays.bind(this);
     this.renderForecast = this.renderForecast.bind(this);
     this.foreCastItem = this.foreCastItem.bind(this);
-    //this.weatherStatus = this.weatherStatus.bind(this);
   }
 
   state = {
@@ -67,7 +65,6 @@ class ForecastWidget extends Component {
     }
   }
 
-
   fetchWeather(userLocation) {
     const { city, countryCode, cords } = userLocation;
     this.setState({ weatherForeCastLoading: true });
@@ -75,7 +72,6 @@ class ForecastWidget extends Component {
     const request = this.constructor.createRequestWithCords(cords.lat, cords.lon);
     axios.get(request).then(response => {
       if (response) {
-        console.log(response);
         this.setState({
           weatherForeCast: {
             data: response.data,
@@ -103,6 +99,7 @@ class ForecastWidget extends Component {
     if (!this.state.weatherForeCastFetched || !this.state.weatherForeCast) {
       return;
     }
+
     const weatherList = this.state.weatherForeCast.data.list;
     const dates = weatherList.map(d => {
       const date = moment(d.dt_txt).format('DD.M', 'fi');
@@ -114,9 +111,9 @@ class ForecastWidget extends Component {
       }
       return dateTime;
     });
-    console.log(dates);
+
     const datesFiltered = dates.filter(d => d.time_formatted === '12:00');
-    console.log(datesFiltered);
+
     return datesFiltered;
   }
 
@@ -164,6 +161,7 @@ class ForecastWidget extends Component {
     if (!this.state.weatherForeCastFetched || !this.state.weatherForeCast) {
       return;
     }
+
     const items = this.filterDays();
 
     return items.map(item => {
