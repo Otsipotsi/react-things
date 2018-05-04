@@ -5,15 +5,7 @@ import styled from 'styled-components';
 import uniqBy from 'lodash/uniqby';
 
 import { openWeatherApiKey } from '../../../config/ApiKeys.js';
-
-// POC purposes a dirty way to Import images.
-import sunny from '../../../resources/images/wi-day-sunny.svg';
-import snow from '../../../resources/images/wi-snow.svg';
-import clouds from '../../../resources/images/wi-cloudy.svg';
-import rain from '../../../resources/images/wi-rain.svg';
-import thunder from '../../../resources/images/wi-thunderstorm.svg';
-import drizzle from '../../../resources/images/wi-showers.svg';
-import alien from '../../../resources/images/wi-alien.svg';
+import { getIcon } from '../helpers';
 
 class ForecastWidget extends Component {
 
@@ -21,24 +13,6 @@ class ForecastWidget extends Component {
     return `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&APPID=${openWeatherApiKey}`;
   }
 
-  static getIcon(type) {
-    switch (type) {
-      case 'Clear':
-        return sunny;
-      case 'Clouds':
-        return clouds;
-      case 'Rain':
-        return rain;
-      case 'Thunderstorm':
-        return thunder;
-      case 'Drizzle':
-        return drizzle;
-      case 'Snow':
-        return snow;
-      default:
-        return alien;
-    }
-  }
 
   constructor(props) {
     super();
@@ -102,7 +76,7 @@ class ForecastWidget extends Component {
 
     const weatherList = this.state.weatherForeCast.data.list;
     const dates = weatherList.map(d => {
-      const date = moment(d.dt_txt).format('DD.M', 'fi');
+      const date = moment(d.dt_txt).format('D.M', 'fi');
       const time = moment(d.dt_txt).format('H:mm', 'fi');
       const dateTime = {
         ...d,
@@ -150,9 +124,9 @@ class ForecastWidget extends Component {
 
     return (
       <ItemWrapper>
-        <DateItem>{data.date_formatted}</DateItem>
-        <Img iconUrl={this.constructor.getIcon(data.weather[0].main)} />
+        <Img iconUrl={getIcon(data.weather[0].main)} />
         <Temp>{parseInt(data.main.temp, 10)}°</Temp>
+        <DateItem>{data.date_formatted}</DateItem>
       </ItemWrapper>
     );
   }
@@ -184,11 +158,10 @@ class ForecastWidget extends Component {
 
 const ForeCastWrapper = styled.div`
   align-items: center;
-  background-color: #00b5c8;
-  color: #FFF;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  padding: 1rem 0;
 `;
 
 export default ForecastWidget;

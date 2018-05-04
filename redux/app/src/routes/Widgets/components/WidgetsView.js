@@ -20,6 +20,8 @@ class WidgetsView extends Component {
 }
 
 const WidgetContainer = styled.div`
+  background-color: #00b5c8;
+  color: #FFF;
   display: flex;
   font-family: Helvetica, sans-serif;
   flex-direction: column;
